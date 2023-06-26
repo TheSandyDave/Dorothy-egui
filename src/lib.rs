@@ -1,7 +1,5 @@
 #![forbid(unsafe_code)]
 #![warn(clippy::all, rust_2018_idioms)]
-#![feature(derive_default_enum)]
-#![feature(drain_filter)]
 
 use eframe::egui::{widgets, Response, Sense, Ui, Widget, WidgetInfo, WidgetType};
 use eframe::epaint::{ColorImage, Rounding, TextureId, Vec2};
@@ -35,6 +33,8 @@ pub static P_MARK_1: &[u8] = include_bytes!("./images/weapon_plus_mark_1.png");
 pub static P_MARK_2: &[u8] = include_bytes!("./images/weapon_plus_mark_2.png");
 pub static P_MARK_3: &[u8] = include_bytes!("./images/weapon_plus_mark_3.png");
 pub static GOLD_BAR: &[u8] = include_bytes!("./images/hihi.png");
+pub static REVANS_POOP: &[u8] = include_bytes!("./images/poo.png");
+pub static REVANS_WEAPON: &[u8] = include_bytes!("./images/revans_weapon.png");
 pub static FIRE_EARRING: &[u8] = include_bytes!("./images/fire_earrings.png");
 pub static WATER_EARRING: &[u8] = include_bytes!("./images/water_earrings.png");
 pub static EARTH_EARRING: &[u8] = include_bytes!("./images/earth_earrings.png");
@@ -232,6 +232,7 @@ pub fn place_total_header(
         Raid::Diaspora => "Diaspora - ".to_string(),
         Raid::Siegfried => "Siegfried - ".to_string(),
         Raid::SUB => "Super Ultimate Bahamut".to_string(),
+        Raid::Revans => "Revans - ".to_string(),
         Raid::None => "".to_string(),
     };
     ui.add_space(20.);
@@ -293,6 +294,8 @@ pub fn place_percentage_label(
         Item::SunbeamEarrings => "Sunbeam Earrings: ".to_string(),
         Item::NightshadeEarrings => "NIghtshade Earrings: ".to_string(),
         Item::EternitySand => "Eternity Sand: ".to_string(),
+        Item::RevansPoop =>"Revans Poop: ".to_string(),
+        Item::RevansWeapon => "Revans Weapon: ".to_string(),
     };
     if (raid == Raid::PBHL && chest == ChestType::Host)
         || raid == Raid::Huanglong
@@ -369,6 +372,8 @@ pub fn place_image_button_combo(
         Item::SunbeamEarrings => "light_earrings.png",
         Item::NightshadeEarrings => "dark_earrings.png",
         Item::EternitySand => "eternity_sand.png",
+        Item::RevansPoop => "poo.png",
+        Item::RevansWeapon => "revans-weapon.png"
     };
     let mut label_text = match item {
         Item::NoDrop => "No Drop",
@@ -392,6 +397,8 @@ pub fn place_image_button_combo(
         Item::SunbeamEarrings => "Sunbeam Earrings",
         Item::NightshadeEarrings => "NIghtshade Earrings",
         Item::EternitySand => "Eternity Sand",
+        Item::RevansPoop  => "Revans Poop",
+        Item::RevansWeapon => "Revans Weapon"
     };
     if chest == ChestType::Host {
         label_text = match raid {
@@ -432,6 +439,8 @@ pub fn place_image_button_combo(
         Item::NightshadeEarrings => DARK_EARRING,
         Item::SunbeamEarrings => LIGHT_EARRING,
         Item::EternitySand => ETERNITY_SAND,
+        Item::RevansPoop => REVANS_POOP,
+        Item::RevansWeapon => REVANS_WEAPON
     };
     if chest == ChestType::Host {
         if raid == Raid::Huanglong {
@@ -614,6 +623,7 @@ pub enum UiTab {
     Hosts,
     SixDragons,
     EternitySand,
+    Revans,
     #[default]
     None,
 }
@@ -648,6 +658,7 @@ pub enum Raid {
     Diaspora,
     Siegfried,
     SUB,
+    Revans,
     #[default]
     None,
 }
@@ -684,7 +695,8 @@ impl fmt::Display for Raid {
             Raid::Diaspora => write!(f, "Diaspora"),
             Raid::Siegfried => write!(f, "Siegfried"),
             Raid::SUB => write!(f, "Super Ultimate Bahamut"),
-            Raid::None => write!(f, ""),
+            Raid::Revans => write!(f, "Revans"),
+            Raid::None => write!(f, "")
         }
     }
 }
@@ -735,6 +747,8 @@ pub enum Item {
     SunbeamEarrings,
     NightshadeEarrings,
     EternitySand,
+    RevansPoop,
+    RevansWeapon,
     #[default]
     NoDrop,
 }
@@ -763,6 +777,8 @@ impl fmt::Display for Item {
             Item::SunbeamEarrings => write!(f, "Sunbeam Earrings"),
             Item::NightshadeEarrings => write!(f, "Nightshade Earrings"),
             Item::EternitySand => write!(f, "Eternity Sand"),
+            Item::RevansPoop => write!(f, "Revans material Drops"),
+            Item::RevansWeapon => write!(f, "Revans Weapon")
         }
     }
 }

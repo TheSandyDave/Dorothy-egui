@@ -742,7 +742,40 @@ impl epi::App for AppDorothy {
                                 ui.heading("Eternity Sands (All Raids) - ".to_owned() + &total_drops_of_item.to_string());
                                 ui.add_space(5.);
                             }
-                        });
+                            if self.config.app_settings.current_ui_tab == UiTab::Revans
+                                || self.config.app_settings.show_all_drops
+                            {
+
+                                place_percentage_label(
+                                    Raid::Revans,
+                                    Item::NoDrop,
+                                    ChestType::None,
+                                    &self.config,
+                                    ui,
+                                );
+                                place_percentage_label(
+                                    Raid::Revans,
+                                    Item::RevansPoop,
+                                    ChestType::Blue,
+                                    &self.config,
+                                    ui,
+                                );
+                                place_percentage_label(
+                                    Raid::Revans,
+                                    Item::RevansWeapon,
+                                    ChestType::Blue,
+                                    &self.config,
+                                    ui,
+                                );
+                                place_percentage_label(
+                                    Raid::Revans,
+                                    Item::EternitySand,
+                                    ChestType::Blue,
+                                    &self.config,
+                                    ui,
+                                );
+                            }                       
+                         });
                     ui.add_space(50.);
                     egui::warn_if_debug_build(ui);
                 });
@@ -1142,6 +1175,16 @@ impl epi::App for AppDorothy {
                 {
                     frame.set_window_title("Dorothy - Eternity Sands");
                 }
+                if ui.selectable_value(                        
+                    &mut self.config.app_settings.current_ui_tab,
+                    UiTab::Revans,
+                    "Revans",
+                )
+                .changed()
+                {
+                    frame.set_window_title("Dorothy - Revans");
+                }
+
             });
 
             ui.add_space(30.);
@@ -2225,6 +2268,74 @@ impl epi::App for AppDorothy {
                                 );
                             });
                     }
+                    if self.config.app_settings.current_ui_tab == UiTab::Revans {
+                        egui::Grid::new("revans_item_grid")
+                            .spacing((
+                                self.config.app_settings.grid_spacing_x,
+                                self.config.app_settings.grid_spacing_y,
+                            ))
+                            .show(ui, |ui| {
+                                ui.style_mut().wrap = Some(false);
+                                if !self.config.app_settings.vertical_grid {
+                                    let revans_drops = vec![
+                                        Item::NoDrop,
+                                        Item::RevansPoop,
+                                        Item::RevansWeapon,
+                                        Item::EternitySand
+                                    ];
+                                    for (pos, drop) in revans_drops.iter().enumerate() {
+                                        let chest = match drop {
+                                            Item::NoDrop => ChestType::None,
+                                            _ => ChestType::Blue,
+                                        };
+                                        if self.config.app_settings.active_items[pos] {
+                                            ui.horizontal(|ui| {
+                                                place_image_button_combo(
+                                                    *drop,
+                                                    Raid::Revans,
+                                                    chest,
+                                                    &self.pbhl_honors,
+                                                    &mut self.config,
+                                                    ui,
+                                                )
+                                            });
+                                        }
+                                        if pos == 3 || pos == 6 || pos == 9 {
+                                            ui.end_row();
+                                        }
+                                    }
+                                } else {
+                                    let revans_drops = vec![
+                                        Item::NoDrop,
+                                        Item::RevansPoop,
+                                        Item::RevansWeapon,
+                                        Item::EternitySand
+                                    ];
+                                    for (pos, drop) in revans_drops.iter().enumerate() {
+                                        let chest = match drop {
+                                            Item::NoDrop => ChestType::None,
+                                            _ => ChestType::Blue,
+                                        };
+                                        if self.config.app_settings.active_items[pos] {
+                                            ui.vertical(|ui| {
+                                                place_image_button_combo(
+                                                    *drop,
+                                                    Raid::Revans,
+                                                    chest,
+                                                    &self.pbhl_honors,
+                                                    &mut self.config,
+                                                    ui,
+                                                )
+                                            });
+                                        }
+                                        if pos == 3 || pos == 6 || pos == 9 {
+                                            ui.end_row();
+                                        }
+                                    }
+                                }
+                            });
+                    }
+
                 });
 
             // Hotkey controls

@@ -2,8 +2,6 @@
 #![cfg_attr(not(debug_assertions), deny(warnings))]
 #![warn(clippy::all, rust_2018_idioms)]
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-#![feature(derive_default_enum)]
-#![feature(drain_filter)]
 
 #[cfg(not(target_arch = "wasm32"))]
 use dorothy_egui::app::AppDorothy;
